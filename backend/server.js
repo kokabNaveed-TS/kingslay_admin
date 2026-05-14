@@ -15,5 +15,5 @@ app.use("/api/auth", require("./routes/auth"));
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
 app.listen(process.env.PORT || 5000, () =>
-  console.log(`✅  API running on http://localhost:${process.env.PORT || 5000}`)
+  console.log(`✅  API running on http://40.81.17.129:${process.env.PORT || 5000}`)
 );
