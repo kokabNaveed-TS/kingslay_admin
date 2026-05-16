@@ -36,8 +36,6 @@ services:
     env_file:
       - ./backend/.env
 
-    depends_on:
-      - mysql
 
     networks:
       - kingsleys_network
