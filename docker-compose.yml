@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
 
     container_name: kingsleys_frontend
-
     restart: always
 
     depends_on:
@@ -15,25 +14,17 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # Main domain
+      # Frontend domain ONLY (no /api)
       - "traefik.http.routers.kingsleys_frontend.rule=Host(`dashboard.projectkingsleys.com`)"
-
-      # HTTPS entrypoint
       - "traefik.http.routers.kingsleys_frontend.entrypoints=websecure"
-
-      # SSL
       - "traefik.http.routers.kingsleys_frontend.tls=true"
-
-      # Cert resolver
       - "traefik.http.routers.kingsleys_frontend.tls.certresolver=production"
 
-      # Internal nginx port
       - "traefik.http.services.kingsleys_frontend.loadbalancer.server.port=80"
 
     networks:
       - kingsleys_network
       - internal_network
-
 
 
   backend:
@@ -42,7 +33,6 @@ services:
       dockerfile: Dockerfile
 
     container_name: kingsleys_backend
-
     restart: always
 
     env_file:
@@ -51,19 +41,17 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # API routing
+      # IMPORTANT: backend should NOT share same host rule as frontend
+      # Use API subpath routing safely
       - "traefik.http.routers.kingsleys_backend.rule=Host(`dashboard.projectkingsleys.com`) && PathPrefix(`/api`)"
-
-      # HTTPS entrypoint
       - "traefik.http.routers.kingsleys_backend.entrypoints=websecure"
-
-      # SSL
       - "traefik.http.routers.kingsleys_backend.tls=true"
-
-      # Cert resolver
       - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
 
-      # Express internal port
+      # IMPORTANT FIX (strip /api before sending to Express)
+      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.kingsleys_backend.middlewares=api-strip"
+
       - "traefik.http.services.kingsleys_backend.loadbalancer.server.port=5000"
 
     networks:
