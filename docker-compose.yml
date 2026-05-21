@@ -14,17 +14,19 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # Frontend domain ONLY (no /api)
-      - "traefik.http.routers.kingsleys_frontend.rule=Host(`dashboard.projectkingsleys.com`)"
+      # Frontend ONLY (exclude API)
+      - "traefik.http.routers.kingsleys_frontend.rule=Host(`dashboard.projectkingsleys.com`) && !PathPrefix(`/api`)"
       - "traefik.http.routers.kingsleys_frontend.entrypoints=websecure"
       - "traefik.http.routers.kingsleys_frontend.tls=true"
       - "traefik.http.routers.kingsleys_frontend.tls.certresolver=production"
 
+      # Nginx inside frontend container
       - "traefik.http.services.kingsleys_frontend.loadbalancer.server.port=80"
 
     networks:
       - kingsleys_network
       - internal_network
+      - traefik
 
 
   backend:
@@ -41,22 +43,23 @@ services:
     labels:
       - "traefik.enable=true"
 
-      # IMPORTANT: backend should NOT share same host rule as frontend
-      # Use API subpath routing safely
+      # API routing
       - "traefik.http.routers.kingsleys_backend.rule=Host(`dashboard.projectkingsleys.com`) && PathPrefix(`/api`)"
       - "traefik.http.routers.kingsleys_backend.entrypoints=websecure"
       - "traefik.http.routers.kingsleys_backend.tls=true"
       - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
 
-      # IMPORTANT FIX (strip /api before sending to Express)
+      # STRIP /api before sending to Express (IMPORTANT)
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
       - "traefik.http.routers.kingsleys_backend.middlewares=api-strip"
 
+      # Express port
       - "traefik.http.services.kingsleys_backend.loadbalancer.server.port=5000"
 
     networks:
       - kingsleys_network
       - internal_network
+      - traefik
 
 
 networks:
@@ -64,4 +67,7 @@ networks:
     driver: bridge
 
   internal_network:
+    external: true
+
+  traefik:
     external: true
