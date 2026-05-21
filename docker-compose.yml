@@ -9,11 +9,26 @@ services:
 
     restart: always
 
-    ports:
-      - "3000:80"
-
     depends_on:
       - backend
+
+    labels:
+      - "traefik.enable=true"
+
+      # Main domain
+      - "traefik.http.routers.kingsleys_frontend.rule=Host(`dashboard.projectkingsleys.com`)"
+
+      # HTTPS entrypoint
+      - "traefik.http.routers.kingsleys_frontend.entrypoints=websecure"
+
+      # SSL
+      - "traefik.http.routers.kingsleys_frontend.tls=true"
+
+      # Cert resolver
+      - "traefik.http.routers.kingsleys_frontend.tls.certresolver=production"
+
+      # Internal nginx port
+      - "traefik.http.services.kingsleys_frontend.loadbalancer.server.port=80"
 
     networks:
       - kingsleys_network
@@ -30,12 +45,26 @@ services:
 
     restart: always
 
-    ports:
-      - "5000:5000"
-
     env_file:
       - ./backend/.env
 
+    labels:
+      - "traefik.enable=true"
+
+      # API routing
+      - "traefik.http.routers.kingsleys_backend.rule=Host(`dashboard.projectkingsleys.com`) && PathPrefix(`/api`)"
+
+      # HTTPS entrypoint
+      - "traefik.http.routers.kingsleys_backend.entrypoints=websecure"
+
+      # SSL
+      - "traefik.http.routers.kingsleys_backend.tls=true"
+
+      # Cert resolver
+      - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
+
+      # Express internal port
+      - "traefik.http.services.kingsleys_backend.loadbalancer.server.port=5000"
 
     networks:
       - kingsleys_network
@@ -47,4 +76,4 @@ networks:
     driver: bridge
 
   internal_network:
-    external: true  
+    external: true
