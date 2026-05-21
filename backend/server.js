@@ -5,6 +5,9 @@ require('dotenv').config();
 
 const app = express();
 
+// ✅ FIX 1: TRUST TRAEFIK PROXY (CRITICAL)
+app.set('trust proxy', 1);
+
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
