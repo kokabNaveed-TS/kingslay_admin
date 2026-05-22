@@ -17,7 +17,7 @@ function layout(content) {
   <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
     <tr><td style="background:#0F172A;padding:28px 40px;text-align:center;">
       <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">KINGSLEY'S</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">Management Suite</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">Management Dashboard</div>
     </td></tr>
     <tr><td style="padding:36px 40px;">${content}</td></tr>
     <tr><td style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:20px 40px;text-align:center;">
