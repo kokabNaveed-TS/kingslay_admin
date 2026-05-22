@@ -49,7 +49,7 @@ services:
       - "traefik.http.routers.kingsleys_backend.tls=true"
       - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
 
-      # STRIP /api before sending to Express (IMPORTANT)
+      # STRIP /api before sending to Express
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
       - "traefik.http.routers.kingsleys_backend.middlewares=api-strip"
 
@@ -59,6 +59,53 @@ services:
     networks:
       - kingsleys_network
       - internal_network
+      - traefik
+
+
+  traefik:
+    image: traefik:v3.0
+
+    container_name: traefik
+    restart: always
+
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+
+      # EntryPoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+
+      # HTTPS timeouts
+      - "--entrypoints.websecure.transport.respondingTimeouts.readTimeout=300s"
+      - "--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=300s"
+      - "--entrypoints.websecure.transport.respondingTimeouts.idleTimeout=360s"
+
+      # Forwarding timeouts
+      - "--serversTransport.forwardingTimeouts.dialTimeout=30s"
+      - "--serversTransport.forwardingTimeouts.responseHeaderTimeout=300s"
+
+      # SSL
+      - "--certificatesresolvers.production.acme.tlschallenge=true"
+      - "--certificatesresolvers.production.acme.email=your-email@example.com"
+      - "--certificatesresolvers.production.acme.storage=/letsencrypt/acme.json"
+
+      # Logs
+      - "--log.level=DEBUG"
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+
+    networks:
       - traefik
 
 
