@@ -11,13 +11,12 @@ router.get('/users', async (req, res) => {
   try {
     const [users] = await db.query('SELECT id,username,email,phone,role,is_active,assigned_tools,created_at FROM users ORDER BY created_at DESC');
     res.json({ users: users.map(u => {
-      let assigned_tools = [];
-      try { assigned_tools = JSON.parse(u.assigned_tools || '[]'); } catch {}
-      return { ...u, assigned_tools };
+      let assignedTools  = [];
+      try { assignedTools  = JSON.parse(u.assigned_tools || '[]'); } catch {}
+      return { ...u, assigned_tools: assignedTools };
     })});
   } catch (e) { res.status(500).json({ message: 'Failed to load users.' }); }
 });
-
 // PATCH /api/admin/users/:id/activate
 router.patch('/users/:id/activate', async (req, res) => {
   try {
