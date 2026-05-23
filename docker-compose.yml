@@ -19,6 +19,7 @@ services:
 
       # Frontend ONLY (exclude API)
       - "traefik.http.routers.kingsleys_frontend.rule=Host(`dashboard.projectkingsleys.com`) && !PathPrefix(`/api`)"
+      - "traefik.http.routers.kingsleys_frontend.priority=1"
       - "traefik.http.routers.kingsleys_frontend.entrypoints=websecure"
       - "traefik.http.routers.kingsleys_frontend.tls=true"
       - "traefik.http.routers.kingsleys_frontend.tls.certresolver=production"
@@ -46,8 +47,11 @@ services:
     labels:
       - "traefik.enable=true"
 
+      - "traefik.docker.network=traefik"
+
       # API routing
       - "traefik.http.routers.kingsleys_backend.rule=Host(`dashboard.projectkingsleys.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.kingsleys_backend.priority=100"
       - "traefik.http.routers.kingsleys_backend.entrypoints=websecure"
       - "traefik.http.routers.kingsleys_backend.tls=true"
       - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
