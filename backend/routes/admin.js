@@ -22,7 +22,7 @@ router.get('/users', async (req, res) => {
           role: u.role,
           is_active: u.is_active,
           created_at: u.created_at,
-          assignedTools: assigned_tools,
+          assignedTools: assignedTools,
         };
       })
     });
