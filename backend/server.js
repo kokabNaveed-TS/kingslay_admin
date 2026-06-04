@@ -10,10 +10,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 const { requireAuth, requireAdmin } = require('./middleware/auth');
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/profile', requireAuth, require('./routes/profile'));
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.use('/auth', require('./routes/auth'));
+app.use('/admin', require('./routes/admin'));
+app.use('/profile', requireAuth, require('./routes/profile'));
+app.get('/health', (req, res) => res.json({ ok: true }));
 
 app.use((req, res) => res.status(404).json({ message: `Route ${req.method} ${req.path} not found.` }));
 app.use((err, req, res, next) => { console.error(err); res.status(500).json({ message: 'Internal server error.' }); });
