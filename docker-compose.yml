@@ -57,8 +57,8 @@ services:
       - "traefik.http.routers.kingsleys_backend.tls.certresolver=production"
 
       # STRIP /api before sending to Express (IMPORTANT)
-      - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
-      - "traefik.http.routers.kingsleys_backend.middlewares=api-strip"
+      # - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+      # - "traefik.http.routers.kingsleys_backend.middlewares=api-strip"
 
       # Express port
       - "traefik.http.services.kingsleys_backend.loadbalancer.server.port=5000"
