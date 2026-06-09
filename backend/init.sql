@@ -3,20 +3,22 @@ USE kingsleys_db;
 
 CREATE TABLE IF NOT EXISTS users (
   id             INT AUTO_INCREMENT PRIMARY KEY,
-  username       VARCHAR(50)  NOT NULL UNIQUE,
+  username       VARCHAR(50)  NOT NULL,
   email          VARCHAR(100) NOT NULL UNIQUE,
   phone          VARCHAR(20)  NOT NULL DEFAULT '',
   password       VARCHAR(255) NOT NULL,
-  -- role is NULL until admin assigns it on activation
   role           ENUM('admin','operation_manager','store_manager','staff') NULL DEFAULT NULL,
   is_active      BOOLEAN NOT NULL DEFAULT FALSE,
-  -- JSON array of tool IDs; only relevant for staff
   assigned_tools JSON DEFAULT (JSON_ARRAY()),
   created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (email),
   INDEX idx_role  (role)
 );
+
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS reset_token       VARCHAR(255) NULL DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS reset_token_expiry DATETIME    NULL DEFAULT NULL;
 
 -- Seed: Super Admin  (password = Admin1234)
 INSERT IGNORE INTO users (username,email,phone,password,role,is_active) VALUES

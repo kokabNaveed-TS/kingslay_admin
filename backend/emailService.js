@@ -61,7 +61,7 @@ async function sendSignupConfirmationToUser({ username, email, role }) {
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <p style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:0 0 12px;">Your Account Details</p>
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Username', username)}${row('Email', email)}${row('Role', roleMap[role]||role)}${row('Status', badge(false))}
+          ${row('Username', username)}${row('Email', email)}${row('Status', badge(false))}
         </table>
       </div>
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 18px;margin-top:18px;">
@@ -84,7 +84,7 @@ async function sendSignupNotificationToAdmin({ username, email, phone, role }) {
       <p style="font-size:14px;color:#64748B;line-height:1.7;margin:0 0 24px;">A new user registered on <strong>${process.env.APP_NAME}</strong> and is awaiting activation.</p>
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Username',username)}${row('Email',email)}${row('Phone',phone)}${row('Role',roleMap[role]||role)}${row('Status',badge(false))}${row('Registered',new Date().toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}))}
+          ${row('Username',username)}${row('Email',email)}${row('Status',badge(false))}${row('Registered',new Date().toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}))}
         </table>
       </div>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:14px 18px;margin-top:18px;">
@@ -164,10 +164,75 @@ async function sendToolsUpdated({ username, email, assignedTools = [] }) {
   });
 }
 
+
+
+// ── 6. Password Reset Email ───────────────────────────────
+// async function sendPasswordReset({ username, email, resetUrl }) {
+//   await transporter.sendMail({
+//     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+//     to: email,
+//     subject: `Reset Your Password — ${process.env.APP_NAME}`,
+//     html: layout(`
+//       <h1>Reset Your Password 🔐</h1>
+//       <p>Hello <strong>${username}</strong>, we received a request to reset your password on <strong>${process.env.APP_NAME}</strong>.</p>
+//       <div class="alert alert-warn">⏳ This link expires in <strong>15 minutes</strong>. If you didn't request this, ignore this email.</div>
+//       <div class="cta"><a href="${resetUrl}">Reset My Password →</a></div>
+//       <p style="font-size:12px;color:#94A3B8;margin-top:16px;text-align:center;">Or copy this link: ${resetUrl}</p>
+//     `),
+//   });
+// }
+
+async function sendPasswordReset({ username, email, resetUrl }) {
+  await transporter.sendMail({
+    from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: `Reset Your Password — ${process.env.APP_NAME}`,
+    html: layout(`
+      <h1 style="font-size:24px;font-weight:800;color:#0F172A;margin:0 0 8px;">
+        Reset Your Password 🔐
+      </h1>
+
+      <p style="font-size:14px;color:#64748B;line-height:1.7;margin:0 0 24px;">
+        Hello <strong>${username}</strong>, we received a request to reset your password for
+        <strong>${process.env.APP_NAME}</strong>.
+      </p>
+
+      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 18px;margin-bottom:18px;">
+        <p style="font-size:13px;color:#92400E;margin:0;font-weight:500;">
+          ⏳ This link will expire in <strong>15 minutes</strong>.
+          If you did not request this, you can safely ignore this email.
+        </p>
+      </div>
+
+      <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
+        <p style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:0 0 12px;">
+          Reset Details
+        </p>
+
+        <table width="100%" cellpadding="0" cellspacing="0">
+          ${row('Email', email)}
+          ${row('Requested At', new Date().toLocaleString('en-AU', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          }))}
+        </table>
+      </div>
+
+      ${cta('Reset Password', resetUrl)}
+
+      <p style="font-size:12px;color:#94A3B8;margin-top:18px;text-align:center;">
+        If the button doesn’t work, copy and paste this link:<br/>
+        <span style="color:#2563EB;word-break:break-all;">${resetUrl}</span>
+      </p>
+    `),
+  });
+}
+
 module.exports = {
   sendSignupConfirmationToUser,
   sendSignupNotificationToAdmin,
   sendAccountActivated,
   sendAccountDeactivated,
   sendToolsUpdated,
+  sendPasswordReset
 };
