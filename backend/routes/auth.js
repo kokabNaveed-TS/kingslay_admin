@@ -76,10 +76,10 @@ router.post('/login', async (req, res) => {
       'SELECT id,username,email,phone,role,password,is_active,assigned_tools,created_at FROM users WHERE email=?',
       [email.toLowerCase()]
     );
-    if (!rows.length) return res.status(401).json({ message: 'No account found with this email.' });
+    if (!rows.length) return res.status(401).json({ message: 'Incorrect email or password.' });
     const user = rows[0];
     if (!await bcrypt.compare(password, user.password))
-      return res.status(401).json({ message: 'Incorrect password.' });
+      return res.status(401).json({ message: 'Incorrect email or password.' });
     let assignedTools = [];
     try { assignedTools = JSON.parse(user.assigned_tools || '[]'); } catch { }
     const { password: _, ...safe } = user;
