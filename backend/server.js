@@ -22,6 +22,6 @@ app.use((err, req, res, next) => { console.error(err); res.status(500).json({ me
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,"0.0.0.0", () => {
-  console.log(`✅  Server on http://localhost:${PORT}`);
+  console.log(`✅  Server on http://20.204.145.150:${PORT}`);
   console.log(`🌍  CORS: ${process.env.CLIENT_URL}`);
 });
