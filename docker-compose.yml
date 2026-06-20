@@ -29,7 +29,6 @@ services:
 
     networks:
       - kingsleys_network
-      - internal_network
       - traefik
 
 
@@ -65,16 +64,12 @@ services:
 
     networks:
       - kingsleys_network
-      - internal_network
       - traefik
 
 
 networks:
   kingsleys_network:
     driver: bridge
-
-  internal_network:
-    external: true
 
   traefik:
     external: true
