@@ -24,7 +24,7 @@ function layout(content) {
       <p style="font-size:12px;color:#94A3B8;margin:0;">© 2026 Kingsley's Chicken ·
         <a href="${process.env.APP_URL}" style="color:#2563EB;text-decoration:none;">${process.env.APP_NAME}</a>
         · <a href="https://www.techscapesolution.com" style="color:#2563EB;text-decoration:none;">TechScape Solution</a></p>
-      <p style="font-size:11px;color:#2563EB;margin:6px 0 0;">Automated message — do not reply directly.</p>
+      <p style="font-size:11px;color:black;margin:6px 0 0;">Automated message — do not reply directly.</p>
     </td></tr>
   </table></td></tr></table></body></html>`;
 }
