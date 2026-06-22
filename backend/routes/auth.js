@@ -80,6 +80,8 @@ router.post('/login', async (req, res) => {
     const user = rows[0];
     if (!await bcrypt.compare(password, user.password))
       return res.status(401).json({ message: 'Incorrect email or password.' });
+    if (!user.is_active)
+      return res.status(403).json({ message: 'Your account has been deactivated. Please contact your admin.' });
     let assignedTools = [];
     try { assignedTools = JSON.parse(user.assigned_tools || '[]'); } catch { }
     const { password: _, ...safe } = user;
@@ -102,7 +104,7 @@ router.get('/me', requireAuth, async (req, res) => {
     try { assignedTools = JSON.parse(user.assigned_tools || '[]'); } catch { }
     user.assignedTools = assignedTools;
     // res.json({ user });
-    res.json({ ...user, impersonating: req.user.impersonating, originalUser: req.user.originalUser});
+    res.json({ ...user, impersonating: req.user.impersonating, originalUser: req.user.originalUser });
   } catch (e) { res.status(500).json({ message: 'Server error.' }); }
 });
 

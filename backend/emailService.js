@@ -50,9 +50,11 @@ function cta(text, url) {
 
 // ── 1. Signup confirmation → new user ────────────────────
 async function sendSignupConfirmationToUser({ username, email, role }) {
-  const roleMap = { admin:'Admin', operation_manager:'Operation Manager', staff:'Staff Member', user:'User' };
+  const roleMap = { admin: 'Admin', operation_manager: 'Operation Manager', staff: 'Staff Member', user: 'User' };
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: email,
     subject: `Welcome to ${process.env.APP_NAME} — Account Created`,
     html: layout(`
@@ -74,9 +76,11 @@ async function sendSignupConfirmationToUser({ username, email, role }) {
 
 // ── 2. Signup notification → admin ───────────────────────
 async function sendSignupNotificationToAdmin({ username, email, phone, role }) {
-  const roleMap = { admin:'Admin', operation_manager:'Operation Manager', staff:'Staff Member', user:'User' };
+  const roleMap = { admin: 'Admin', operation_manager: 'Operation Manager', staff: 'Staff Member', user: 'User' };
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: process.env.ADMIN_EMAIL,
     subject: `[Action Required] New Registration — ${username}`,
     html: layout(`
@@ -84,7 +88,7 @@ async function sendSignupNotificationToAdmin({ username, email, phone, role }) {
       <p style="font-size:14px;color:#64748B;line-height:1.7;margin:0 0 24px;">A new user registered on <strong>${process.env.APP_NAME}</strong> and is awaiting activation.</p>
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Username',username)}${row('Email',email)}${row('Status',badge(false))}${row('Registered',new Date().toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}))}
+          ${row('Username', username)}${row('Email', email)}${row('Status', badge(false))}${row('Registered', new Date().toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }))}
         </table>
       </div>
       <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:14px 18px;margin-top:18px;">
@@ -97,15 +101,17 @@ async function sendSignupNotificationToAdmin({ username, email, phone, role }) {
 
 // ── 3. Account activated → user ──────────────────────────
 async function sendAccountActivated({ username, email, role, assignedTools = [] }) {
-  const roleMap = { admin:'Admin', operation_manager:'Operation Manager', store_manager:'Store Manager', staff:'Staff Member' };
+  const roleMap = { admin: 'Admin', operation_manager: 'Operation Manager', store_manager: 'Store Manager', staff: 'Staff Member' };
   const toolsSection = assignedTools.length
     ? `<div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px 20px;margin-top:18px;">
         <p style="font-size:12px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;">✅ Modules Assigned (${assignedTools.length})</p>
-        ${assignedTools.map(t=>`<span style="background:#DCFCE7;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;display:inline-block;margin:2px;">${t}</span>`).join('')}
+        ${assignedTools.map(t => `<span style="background:#DCFCE7;color:#166534;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;display:inline-block;margin:2px;">${t}</span>`).join('')}
       </div>`
     : `<div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:14px 18px;margin-top:18px;"><p style="font-size:13px;color:#166534;margin:0;">✅ Your account is now active. Sign in to view your dashboard.</p></div>`;
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: email,
     subject: `Your ${process.env.APP_NAME} Account is Now Active`,
     html: layout(`
@@ -113,7 +119,7 @@ async function sendAccountActivated({ username, email, role, assignedTools = [] 
       <p style="font-size:14px;color:#64748B;line-height:1.7;margin:0 0 24px;">Great news, <strong>${username}</strong>! Your account on <strong>${process.env.APP_NAME}</strong> has been activated.</p>
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Username',username)}${row('Role',roleMap[role]||role)}${row('Status',badge(true))}${row('Activated',new Date().toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}))}
+          ${row('Username', username)}${row('Role', roleMap[role] || role)}${row('Status', badge(true))}${row('Activated', new Date().toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }))}
         </table>
       </div>
       ${toolsSection}
@@ -126,6 +132,8 @@ async function sendAccountActivated({ username, email, role, assignedTools = [] 
 async function sendAccountDeactivated({ username, email }) {
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: email,
     subject: `Your ${process.env.APP_NAME} Account Has Been Deactivated`,
     html: layout(`
@@ -133,7 +141,7 @@ async function sendAccountDeactivated({ username, email }) {
       <p style="font-size:14px;color:#64748B;line-height:1.7;margin:0 0 24px;">Hello <strong>${username}</strong>, your account on <strong>${process.env.APP_NAME}</strong> has been deactivated by an admin.</p>
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Username',username)}${row('Status',badge(false))}${row('Date',new Date().toLocaleString('en-AU',{dateStyle:'medium',timeStyle:'short'}))}
+          ${row('Username', username)}${row('Status', badge(false))}${row('Date', new Date().toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }))}
         </table>
       </div>
       <div style="background:#FFF1F2;border:1px solid #FECACA;border-radius:12px;padding:14px 18px;margin-top:18px;">
@@ -147,6 +155,8 @@ async function sendAccountDeactivated({ username, email }) {
 async function sendToolsUpdated({ username, email, assignedTools = [] }) {
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: email,
     subject: `Your Dashboard Modules Have Been Updated`,
     html: layout(`
@@ -155,9 +165,9 @@ async function sendToolsUpdated({ username, email, assignedTools = [] }) {
       <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:20px;">
         <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:0 0 12px;">Active Modules (${assignedTools.length})</p>
         ${assignedTools.length
-          ? assignedTools.map(t=>`<span style="background:#EFF6FF;color:#1D4ED8;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;border:1px solid #DBEAFE;display:inline-block;margin:2px;">${t}</span>`).join('')
-          : '<p style="font-size:13px;color:#94A3B8;margin:0;">No modules are currently assigned.</p>'
-        }
+        ? assignedTools.map(t => `<span style="background:#EFF6FF;color:#1D4ED8;font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;border:1px solid #DBEAFE;display:inline-block;margin:2px;">${t}</span>`).join('')
+        : '<p style="font-size:13px;color:#94A3B8;margin:0;">No modules are currently assigned.</p>'
+      }
       </div>
       ${cta('View My Dashboard', process.env.APP_URL)}
     `),
@@ -165,26 +175,11 @@ async function sendToolsUpdated({ username, email, assignedTools = [] }) {
 }
 
 
-
-// ── 6. Password Reset Email ───────────────────────────────
-// async function sendPasswordReset({ username, email, resetUrl }) {
-//   await transporter.sendMail({
-//     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
-//     to: email,
-//     subject: `Reset Your Password — ${process.env.APP_NAME}`,
-//     html: layout(`
-//       <h1>Reset Your Password 🔐</h1>
-//       <p>Hello <strong>${username}</strong>, we received a request to reset your password on <strong>${process.env.APP_NAME}</strong>.</p>
-//       <div class="alert alert-warn">⏳ This link expires in <strong>15 minutes</strong>. If you didn't request this, ignore this email.</div>
-//       <div class="cta"><a href="${resetUrl}">Reset My Password →</a></div>
-//       <p style="font-size:12px;color:#94A3B8;margin-top:16px;text-align:center;">Or copy this link: ${resetUrl}</p>
-//     `),
-//   });
-// }
-
 async function sendPasswordReset({ username, email, resetUrl }) {
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
+    replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
+
     to: email,
     subject: `Reset Your Password — ${process.env.APP_NAME}`,
     html: layout(`
@@ -212,9 +207,9 @@ async function sendPasswordReset({ username, email, resetUrl }) {
         <table width="100%" cellpadding="0" cellspacing="0">
           ${row('Email', email)}
           ${row('Requested At', new Date().toLocaleString('en-AU', {
-            dateStyle: 'medium',
-            timeStyle: 'short'
-          }))}
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }))}
         </table>
       </div>
 
