@@ -15,13 +15,13 @@ function layout(content) {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#F1F5F9;padding:40px 20px;">
   <tr><td align="center">
   <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
-    <tr><td style="background:#0F172A;padding:28px 40px;text-align:center;">
-      <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">KINGSLEY'S</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">Management Dashboard</div>
+    <tr><td style="background:#E67E22;padding:28px 40px;text-align:center;">
+      <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">KINGSLEYS</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.8);margin-top:4px;letter-spacing:1px;text-transform:uppercase;">Management Dashboard</div>
     </td></tr>
     <tr><td style="padding:36px 40px;">${content}</td></tr>
     <tr><td style="background:#F8FAFC;border-top:1px solid #E2E8F0;padding:20px 40px;text-align:center;">
-      <p style="font-size:12px;color:#94A3B8;margin:0;">© 2026 Kingsley's Chicken ·
+      <p style="font-size:12px;color:#94A3B8;margin:0;">© 2026 Kingsleys Chicken ·
         <a href="${process.env.APP_URL}" style="color:#2563EB;text-decoration:none;">${process.env.APP_NAME}</a>
         · <a href="https://www.techscapesolution.com" style="color:#2563EB;text-decoration:none;">TechScape Solution</a></p>
       <p style="font-size:11px;color:black;margin:6px 0 0;">Automated message — do not reply directly.</p>
@@ -44,7 +44,7 @@ function badge(active) {
 
 function cta(text, url) {
   return `<div style="text-align:center;margin-top:28px;">
-    <a href="${url}" style="background:#1D4ED8;color:#fff;font-size:14px;font-weight:700;padding:13px 32px;border-radius:10px;text-decoration:none;display:inline-block;">${text} →</a>
+    <a href="${url}" style="background:#E67E22;color:#fff;font-size:14px;font-weight:700;padding:13px 32px;border-radius:10px;text-decoration:none;display:inline-block;">${text} →</a>
   </div>`;
 }
 
