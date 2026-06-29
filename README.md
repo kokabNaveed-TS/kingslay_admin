@@ -1,6 +1,6 @@
-# Kingsley's Management Dashboard
+# Kingsleys Management Dashboard
 
-A professional, full-stack role-based access management system for Kingsley's Chicken.
+A professional, full-stack role-based access management system for Kingsleys Chicken.
 Built with **React + Vite** (frontend) and **Express + MySQL** (backend).
 
 ---
@@ -169,7 +169,7 @@ Frontend runs on **http://localhost:5173** and proxies `/api` to the backend.
 | User signs up | User (welcome) + Admin (notification) |
 | Admin activates account | User (activation confirmation) |
 | Module permissions updated | User (list of enabled/disabled modules) |
-| Password reset request | User (reset link, 1hr expiry) |
+| Password reset request | User (reset link, 15 min expiry) |
 
 ---
 
