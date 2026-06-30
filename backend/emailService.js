@@ -176,6 +176,7 @@ async function sendToolsUpdated({ username, email, assignedTools = [] }) {
 
 
 async function sendPasswordReset({ username, email, resetUrl }) {
+  const displayEmail = email.includes('@') ? email.split('@')[0].charAt(0) + '*'.repeat(email.split('@')[0].length - 1) + '@' + email.split('@')[1] : email;
   await transporter.sendMail({
     from: `"${process.env.APP_NAME}" <${process.env.GMAIL_USER}>`,
     replyTo: process.env.NO_REPLY_EMAIL || 'noreply@projectkingsleyschicken.com', // <--- Add this line
@@ -205,7 +206,7 @@ async function sendPasswordReset({ username, email, resetUrl }) {
         </p>
 
         <table width="100%" cellpadding="0" cellspacing="0">
-          ${row('Email', email)}
+          ${row('Email', displayEmail)}
           ${row('Requested At', new Date().toLocaleString('en-AU', {
       dateStyle: 'medium',
       timeStyle: 'short'
